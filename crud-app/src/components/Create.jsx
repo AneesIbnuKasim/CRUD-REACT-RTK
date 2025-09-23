@@ -23,7 +23,7 @@ function Create() {
   const handleSubmit = (values, {resetForm}) => {
     resetForm()
     dispatch(createUser(values))
-    navigate('/')
+    navigate('/read')
   }
 
   return (

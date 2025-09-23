@@ -1,0 +1,37 @@
+.modalBackground {
+    background-color: black;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.9;
+    z-index: 99;
+}
+
+.modalContainer{
+    background-color: rgb(239, 239, 239);
+    padding: 1rem 2rem 1rem 2rem;
+    height: 20rem;
+    width: 40%;
+    box-shadow: 1px 3px 3px #2c2c2a;
+    border-radius: 10px;
+    opacity: 1.5;
+    z-index: 100;
+}
+.close {
+    display: block;
+    margin-left: auto;
+    font-size: 2rem;
+    color: red;
+    cursor: pointer;
+    border-radius: 50%;
+}
+.close:hover{
+    background-color: black;
+    transition: 0.6s ease-in-out;
+    color: white;
+}

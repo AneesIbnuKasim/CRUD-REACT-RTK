@@ -1,7 +1,9 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 function Header() {
+  const allUsers = useSelector(state=>state.app.users)
   return (
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
   <div className="container-fluid">
@@ -15,7 +17,7 @@ function Header() {
           <Link className="nav-link active" aria-current="page" to={'/'}>Create User</Link>
         </li>
         <li className="nav-item">
-          <Link className="nav-link" to={'/read'}>Show users</Link>
+          <Link className="nav-link" to={'/read'}>Show users({allUsers.length})</Link>
         </li>
       </ul>
       <form className="d-flex" role="search">
