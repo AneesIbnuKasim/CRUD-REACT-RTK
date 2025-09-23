@@ -30,6 +30,17 @@ export const showUser = createAsyncThunk('read-user',async(_,{rejectWithValue})=
     }
 })
 
+//delete action
+export const deleteUser = createAsyncThunk('delete-user',async(id,{rejectWithValue})=>{
+    const response = await fetch(`https://68d2aa2acc7017eec544cb72.mockapi.io/users/${id}`)
+    try {
+        const result = await response.json()
+        return result
+    } catch (error) {
+        return rejectWithValue(error.message)
+    }
+})
+
 const userReducer = createSlice({
     name: "userReducer",
     initialState:{
@@ -47,7 +58,7 @@ const userReducer = createSlice({
         })
         .addCase(createUser.rejected,(state, action)=>{
             state.loading = false
-            state.error = action.payload
+            state.error = action.payload.message
         })
         .addCase(showUser.pending,(state)=> {state.loading = true})
         .addCase(showUser.fulfilled,(state, action)=>{
@@ -56,7 +67,19 @@ const userReducer = createSlice({
         })
         .addCase(showUser.rejected,(state, action)=>{
             state.loading = false
-            state.error = action.payload
+            state.error = action.payload.message
+        })
+        .addCase(deleteUser.pending,(state)=> {state.loading = true})
+        .addCase(deleteUser.fulfilled,(state, action)=>{
+            const {id} = action.payload
+            state.loading = false
+            if (id) {
+                state.users = state.users.filter(user=>id!==user.id)
+            }
+        })
+        .addCase(deleteUser.rejected,(state, action)=>{
+            state.loading = false
+            state.error = action.payload.message
         })
     }
 })
