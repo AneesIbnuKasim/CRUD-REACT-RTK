@@ -19,6 +19,29 @@ export const createUser = createAsyncThunk('create-user',async(data,{rejectWithV
     }
 })
 
+//edit action
+export const editUser = createAsyncThunk('edit-user',async(data,{rejectWithValue})=>{
+    const response = await fetch (`https://68d2aa2acc7017eec544cb72.mockapi.io/users/${data.id}`, 
+        {
+            method: 'PUT',
+            headers: {
+                'content-type':'application/json'
+            },
+            body:JSON.stringify(data)
+        }
+    )
+    try {
+        console.log('dta',data);
+        
+        const result = await response.json()
+        console.log('updated user',response);
+        
+        return result
+    } catch (error) {
+        return rejectWithValue(error)
+    }
+})
+
 //read action
 export const showUser = createAsyncThunk('read-user',async(_,{rejectWithValue})=>{
     const response = await fetch('https://68d2aa2acc7017eec544cb72.mockapi.io/users')
@@ -32,7 +55,7 @@ export const showUser = createAsyncThunk('read-user',async(_,{rejectWithValue})=
 
 //delete action
 export const deleteUser = createAsyncThunk('delete-user',async(id,{rejectWithValue})=>{
-    const response = await fetch(`https://68d2aa2acc7017eec544cb72.mockapi.io/users/${id}`)
+    const response = await fetch(`https://68d2aa2acc7017eec544cb72.mockapi.io/users/${id}`,{method:'DELETE'})
     try {
         const result = await response.json()
         return result
@@ -57,6 +80,17 @@ const userReducer = createSlice({
             state.users.push(action.payload)
         })
         .addCase(createUser.rejected,(state, action)=>{
+            state.loading = false
+            state.error = action.payload.message
+        })
+        .addCase(editUser.pending,(state)=> {state.loading = true})
+        .addCase(editUser.fulfilled,(state, action)=>{
+            state.loading = false
+            state.users = state.users.map(user=>(
+                user.id===action.payload.id ? action.payload : user
+            ))
+        })
+        .addCase(editUser.rejected,(state, action)=>{
             state.loading = false
             state.error = action.payload.message
         })

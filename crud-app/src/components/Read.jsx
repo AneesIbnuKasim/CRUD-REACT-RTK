@@ -30,9 +30,10 @@ function Read() {
     <h5 className="card-title">{user.name}</h5>
     <h6 className="card-subtitle mb-2 text-body-secondary">{user.email}</h6>
     <p className="card-text">Gender:{user.gender}</p>
-    <button onClick={()=>{setId(user.id);setShowPopup(true)}} className="card-link bg-primary">View</button>
-    <button onClick={()=>{setId(user.id);setShowPopup(true)}} className="card-link bg-success">Edit</button>
-    <button onClick={()=>dispatch(deleteUser(user.id))} className="card-link bg-danger">Delete</button>
+    <button onClick={()=>{setId(user.id);setShowPopup(true)}} className="card-link text-light bg-primary">View</button>
+    <Link className='card-link ' to={`/edit/${user.id}`}>
+    <button className="bg-success text-light">Edit</button></Link>
+    <button onClick={()=>dispatch(deleteUser(user.id))} className="card-link text-light bg-danger">Delete</button>
   </div>
   </div>
     ))
