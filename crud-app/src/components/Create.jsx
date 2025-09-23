@@ -3,9 +3,12 @@ import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 import { useDispatch } from 'react-redux'
 import { createUser } from '../app/userReducer'
+import { useNavigate } from 'react-router-dom'
 
 function Create() {
-    const [users, setUsers]  = useState([])
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
   const schema = Yup.object({
     name: Yup.string()
       .min(3, 'min length should be 3')
@@ -16,11 +19,11 @@ function Create() {
       .required('email required'),
     gender: Yup.string().required('gender required'),
   })
-    const dispatch = useDispatch()
+    
   const handleSubmit = (values, {resetForm}) => {
-     setUsers(values)
     resetForm()
     dispatch(createUser(values))
+    navigate('/')
   }
 
   return (

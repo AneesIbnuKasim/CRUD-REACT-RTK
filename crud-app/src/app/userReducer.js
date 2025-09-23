@@ -1,9 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
-
-export const createUser = createAsyncThunk('create-user',async(data)=>{
-    console.log('in create data:',data);
-    
+//create action
+export const createUser = createAsyncThunk('create-user',async(data,{rejectWithValue})=>{
     const response = await fetch ('https://68d2aa2acc7017eec544cb72.mockapi.io/users', 
         {
             method: 'POST',
@@ -15,32 +13,51 @@ export const createUser = createAsyncThunk('create-user',async(data)=>{
     )
     try {
         const result = await response.json()
-        console.log('result',result);
-        
         return result
     } catch (error) {
-        console.log(error);
-        
+        return rejectWithValue(error)
+    }
+})
+
+//read action
+export const showUser = createAsyncThunk('read-user',async(_,{rejectWithValue})=>{
+    const response = await fetch('https://68d2aa2acc7017eec544cb72.mockapi.io/users')
+    try {
+        const result = await response.json()
+        return result
+    } catch (error) {
+        return rejectWithValue(error.message)
     }
 })
 
 const userReducer = createSlice({
-    name: "userDetails",
+    name: "userReducer",
     initialState:{
         users:[],
         loading:false,
         error: null
     },
-    reducers: {
-        [createUser.pending] : (state)=> state.loading = true,
-        [createUser.fulfilled] : (state, action)=>{
+    reducers:{},
+    extraReducers: (builder)=>{
+        builder
+        .addCase(createUser.pending,(state)=> {state.loading = true})
+        .addCase(createUser.fulfilled,(state, action)=>{
             state.loading = false
             state.users.push(action.payload)
-        },
-        [createUser.rejected] : (state, action)=>{
+        })
+        .addCase(createUser.rejected,(state, action)=>{
+            state.loading = false
+            state.error = action.payload
+        })
+        .addCase(showUser.pending,(state)=> {state.loading = true})
+        .addCase(showUser.fulfilled,(state, action)=>{
             state.loading = false
             state.users = action.payload
-        },
+        })
+        .addCase(showUser.rejected,(state, action)=>{
+            state.loading = false
+            state.error = action.payload
+        })
     }
 })
 
