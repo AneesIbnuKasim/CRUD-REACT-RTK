@@ -31,11 +31,8 @@ export const editUser = createAsyncThunk('edit-user',async(data,{rejectWithValue
         }
     )
     try {
-        console.log('dta',data);
-        
         const result = await response.json()
         console.log('updated user',response);
-        
         return result
     } catch (error) {
         return rejectWithValue(error)
@@ -64,14 +61,20 @@ export const deleteUser = createAsyncThunk('delete-user',async(id,{rejectWithVal
     }
 })
 
+//create slice
 const userReducer = createSlice({
     name: "userReducer",
     initialState:{
         users:[],
         loading:false,
-        error: null
+        error: null,
+        searchTerm: ''
     },
-    reducers:{},
+    reducers:{
+        setSearchTerm: (state, action)=>{
+            state.searchTerm = action.payload
+        }
+    },
     extraReducers: (builder)=>{
         builder
         .addCase(createUser.pending,(state)=> {state.loading = true})
@@ -97,6 +100,9 @@ const userReducer = createSlice({
         .addCase(showUser.pending,(state)=> {state.loading = true})
         .addCase(showUser.fulfilled,(state, action)=>{
             state.loading = false
+            if(state.searchTerm) {
+                
+            }
             state.users = action.payload
         })
         .addCase(showUser.rejected,(state, action)=>{
@@ -118,4 +124,5 @@ const userReducer = createSlice({
     }
 })
 
+export const { setSearchTerm } = userReducer.actions
 export default userReducer.reducer

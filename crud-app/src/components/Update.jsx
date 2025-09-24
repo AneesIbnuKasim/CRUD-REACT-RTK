@@ -88,7 +88,6 @@ function Update() {
                   value="male"
                   className="form-check-input"
                   id="male"
-                  checked = {singleUser.gender==='male'}
                 />
                 <label htmlFor="male" className="form-check-label">Male</label>
               </div>
@@ -99,7 +98,6 @@ function Update() {
                   value="female"
                   className="form-check-input"
                   id="female"
-                  checked = {singleUser.gender==='female'}
                 />
                 <label htmlFor="female" className="form-check-label">Female</label>
               </div>
