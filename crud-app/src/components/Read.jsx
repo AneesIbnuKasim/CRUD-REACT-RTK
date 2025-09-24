@@ -4,7 +4,6 @@ import { deleteUser, showUser } from '../app/userReducer'
 import { Link } from 'react-router-dom'
 import CustomModal from './CustomModal'
 
-
 function Read() {
     const dispatch = useDispatch()
     const { users, loading, searchTerm } = useSelector(state=>state.app)
@@ -16,40 +15,35 @@ function Read() {
         dispatch(showUser())
     },[])
 
-    if (loading) return <div className='text-center my-4 fs-1'>Loading....</div>
-  return (
-    <>
-    {showPopup && <CustomModal id={id} showPopup={showPopup} setShowPopup={setShowPopup} />}
-    {/*------ radio filter ------*/}
-    <div className='text-center d-flex gap-2 my-3 justify-content-center'>
-        <input type="radio" checked={genderFilter==='all'} onChange={(e)=>setGenderFilter(e.target.value)} value={'all'} name="gender" id="" /> All
-        <input type="radio" checked={genderFilter==='male'} onChange={(e)=>setGenderFilter(e.target.value)} value={'male'} name='gender' /> Male
-        <input checked={genderFilter==='female'} onChange={(e)=>setGenderFilter(e.target.value)} type="radio" value={'female'} name='gender' /> Female
-        </div>
-
-  { users &&
-      users.filter(user=>{
+    const filteredUsers = users.filter(user=>{
         if(searchTerm.length===0) {
-            return user
+            return true
         }
         else {
             return Object?.values(user).join('').toLowerCase().includes(searchTerm.toLowerCase())
         }
     })
     .filter(user=>{
-        if(genderFilter==='male') {
-            return user.gender === genderFilter
-        }
-        else if(genderFilter==='female') {
-            return user.gender === genderFilter
-        }
-        else {
-            return user
-        }
+        if(genderFilter==='all') return true
+        return user.gender === genderFilter
     })
+
+    if (loading) return <div className='text-center my-4 fs-1'>Loading....</div>
+  return (
+    <>
+    {showPopup && <CustomModal id={id} showPopup={showPopup} setShowPopup={setShowPopup} />}
+
+    {/*------ radio filter ------*/}
     
-    .map((user)=>(
-        user ? 
+    <div className='text-center d-flex gap-2 my-3 justify-content-center'>
+        <input type="radio" checked={genderFilter==='all'} onChange={(e)=>setGenderFilter(e.target.value)} value={'all'} name="gender" id="" /> All
+        <input type="radio" checked={genderFilter==='male'} onChange={(e)=>setGenderFilter(e.target.value)} value={'male'} name='gender' /> Male
+        <input checked={genderFilter==='female'} onChange={(e)=>setGenderFilter(e.target.value)} type="radio" value={'female'} name='gender' /> Female
+        </div>
+
+  { filteredUsers && filteredUsers.length > 0 ? (
+
+    filteredUsers.map((user)=>( 
         <>
             <div key={user.id} className="card w-50 mx-auto text-center">
         <div className="card-body">
@@ -62,10 +56,11 @@ function Read() {
     <button onClick={()=>dispatch(deleteUser(user.id))} className="card-link text-light bg-danger">Delete</button>
   </div>
   </div>
-  </>
-  : 
-    <div>No user</div>
-    ))
+  </>)
+    )):
+    (<div className='text-center my-5'>
+        <h1>No users found...</h1>
+    </div>)
   }
   </>
 
