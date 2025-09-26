@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { deleteUser, showUser } from '../app/userReducer'
 import { Link } from 'react-router-dom'
 import CustomModal from './CustomModal'
+import Swal from 'sweetalert2'
 
 function Read() {
     const dispatch = useDispatch()
@@ -10,6 +11,19 @@ function Read() {
     const [id, setId] = useState('')
     const [showPopup, setShowPopup] = useState(false)
     const [genderFilter, setGenderFilter] = useState('all')
+
+    const handleDelete = async(id,name)=>{
+        const result = await Swal.fire({
+            title:`Are you sure to delete user: ${name}`,
+            icon:'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete'
+        })
+        if(result.isConfirmed) {
+            dispatch(deleteUser(id))
+            Swal.fire('User has been deleted')
+        }
+    }
 
     useEffect(()=>{
         dispatch(showUser())
@@ -53,7 +67,7 @@ function Read() {
     <button onClick={()=>{setId(user.id);setShowPopup(true)}} className="card-link text-light bg-primary">View</button>
     <Link className='card-link ' to={`/edit/${user.id}`}>
     <button className="bg-success text-light">Edit</button></Link>
-    <button onClick={()=>dispatch(deleteUser(user.id))} className="card-link text-light bg-danger">Delete</button>
+    <button onClick={()=>handleDelete(user.id,user.name)} className="card-link text-light bg-danger">Delete</button>
   </div>
   </div>
   </>)

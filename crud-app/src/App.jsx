@@ -1,15 +1,20 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
 import Header from './Layout/Header'
 import Create from './components/Create'
 import Read from './components/Read'
-import CustomModal from './components/CustomModal'
 import Update from './components/Update'
 import ErrorBoundary from './components/ErrorBoundary'
+import { useDispatch } from 'react-redux'
+import { showUser } from './app/userReducer'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const dispatch = useDispatch()
+
+  useEffect(()=>{
+    dispatch(showUser())
+  },[])
 
   return (
     <>

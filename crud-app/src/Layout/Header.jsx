@@ -5,13 +5,14 @@ import { Link } from 'react-router-dom'
 
 function Header() {
   const allUsers = useSelector(state=>state.app.users)
+  console.log(allUsers);
+  
   const dispatch = useDispatch()
   const [ searchData, setSearchData ] =useState('')
 
   const handleSearch = (e)=>{
     setSearchData(e.target.value)
     dispatch(setSearchTerm(e.target.value))
-
   }
     
   return (

@@ -32,7 +32,6 @@ export const editUser = createAsyncThunk('edit-user',async(data,{rejectWithValue
     )
     try {
         const result = await response.json()
-        console.log('updated user',response);
         return result
     } catch (error) {
         return rejectWithValue(error)

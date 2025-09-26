@@ -4,6 +4,7 @@ import * as Yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { editUser } from '../app/userReducer'
+import Swal from 'sweetalert2'
 
 function Update() {
     const dispatch = useDispatch()
@@ -12,10 +13,7 @@ function Update() {
     
     
     const {users} = useSelector(state=>state.app)
-    console.log('id',id,users);
     const singleUser = users.find(user=>user.id===id)
-    console.log(singleUser);
-    
 
   const schema = Yup.object({
     name: Yup.string()
@@ -31,10 +29,18 @@ function Update() {
       .required('name required'),
   })
     
-  const handleSubmit = (values, {resetForm}) => {
+  const handleSubmit = async(values, {resetForm}) => {
+    const response = await Swal.fire({
+      title: 'Are you sure to update?',
+      confirmButtonText: 'Yes, Update',
+      showCancelButton: true,
+      cancelButtonText: 'No'
+    })
+    if(response.isConfirmed) {
     dispatch(editUser({...singleUser,...values}))
     resetForm()
     navigate('/read')
+    }
   }
 
   return (
